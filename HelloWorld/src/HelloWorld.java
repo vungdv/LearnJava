@@ -2,7 +2,7 @@ import models.Dog;
 import models.Person;
 
 import java.time.LocalDate;
-
+//No package -> Default Package.
 public class HelloWorld {
     //shift + return for the new line
     public static void main(String[] args) {
