@@ -2,6 +2,8 @@ package models;
 
 import java.time.LocalDate;
 
+//there is a default class Object
+// that meas public class Pet{} equivalent to public class Pet extends Object {}
 public class Pet {
     private String name;
     private LocalDate dob;
@@ -29,4 +31,14 @@ public class Pet {
     public void setDob(LocalDate dob) {
         this.dob = dob;
     }
+
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "name='" + name + '\'' +
+                ", dob=" + dob +
+                '}' +  super.toString();
+    }
+
+
 }
