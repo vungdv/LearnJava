@@ -9,7 +9,7 @@
 <body>
 
 <div class="col-8 mx-auto">
-    <table class="table">
+    <table class="table table-bordered">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -20,15 +20,42 @@
         </tr>
         </thead>
         <tbody>
+        <tr th:if="${#lists.isEmpty(people)}">
+            <td colspan="6" class="text-center">No Data</td>
+        </tr>
         <tr th:each="person: ${people}">
             <th scope="row" th:text="${person.id}"></th>
             <td th:text="${{person.getLastName}}">Mark</td>
             <td th:text="${{person.getFirstName}}">Otto</td>
             <td th:text="${{person.dob}}">@mdo</td>
-            <td th:text="${{person.getSalary}}">@mdo</td>
+            <td th:text="${{person.salary}}">@mdo</td>
         </tr>
         </tbody>
     </table>
+    <form th:object="${person}" method="post">
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" th:field="*{firstName}" aria-describedby="firstNameHelp">
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" th:field="*{lastName}" aria-describedby="lastNameHelp">
+        </div>
+        <div class="mb-3">
+            <label for="dobName" class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" id="dobName" th:field="*{dob}" aria-describedby="dobNameHelp">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="mb-3">
+            <label for="salary" class="form-label">Salary</label>
+            <input type="number" class="form-control" id="salary" th:field="*{salary}" aria-describedby="salaryHelp">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Person</button>
+    </form>
 </div>
 </body>
 </html>
