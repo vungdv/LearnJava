@@ -1,5 +1,6 @@
 package com.vungdo.peopledbweb.data;
 
+import com.vungdo.peopledbweb.exception.StorageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,7 +23,7 @@ public class LocalFileRepository {
             Path filePath = Path.of(STORAGE_FOLDER).resolve(filename).normalize();
             Files.copy(inputStream, filePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException(e);
         }
     }
 
@@ -31,9 +32,7 @@ public class LocalFileRepository {
             Path filePath = Path.of(STORAGE_FOLDER).resolve(fileName).normalize();
             return new UrlResource(filePath.toUri());
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            throw new StorageException(e);
         }
-
-        return  null;
     }
 }
