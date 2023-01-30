@@ -1,6 +1,7 @@
 package com.vungdo.peopledbweb.web.controller;
 
 import com.vungdo.peopledbweb.biz.model.Person;
+import com.vungdo.peopledbweb.biz.service.PersonService;
 import com.vungdo.peopledbweb.data.LocalFileRepository;
 import com.vungdo.peopledbweb.data.PersonRepository;
 import jakarta.validation.Valid;
@@ -21,19 +22,15 @@ import java.util.Optional;
 @RequestMapping("/people")
 @Log4j2
 public class PeopleController {
-    private final PersonRepository personRepository;
-    private final LocalFileRepository fileRepository;
 
-    public PeopleController(
-            PersonRepository personRepository,
-            LocalFileRepository fileRepository) {
-        this.personRepository = personRepository;
-        this.fileRepository = fileRepository;
+    private final PersonService personService;
+
+    public PeopleController(PersonService personService) {
+        this.personService = personService;
     }
-
     @ModelAttribute("people")
     public Iterable<Person> getPeople() {
-        return personRepository.findAll();
+        return personService.findAll();
     }
     @ModelAttribute("person")
     public Person getPerson() {
@@ -49,7 +46,7 @@ public class PeopleController {
     public ResponseEntity<Resource> getResource(@PathVariable String fileName) {
         return ResponseEntity
                 .ok()
-                .body(fileRepository.getResource(fileName));
+                .body(personService.getResource(fileName));
     }
 
     @PostMapping
@@ -59,8 +56,7 @@ public class PeopleController {
         log.info("Errors: " + errors);
 
         if(!errors.hasErrors()) {
-            fileRepository.save(photoFile.getOriginalFilename(), photoFile.getInputStream());
-            personRepository.save(person);
+            personService.save(person, photoFile.getInputStream());
             return "redirect:people";
         }
         return "people";
@@ -68,14 +64,14 @@ public class PeopleController {
     @PostMapping(params = "delete=true")
     public String deletePeople(@RequestParam Optional<List<Long>> selections) {
         log.info(selections);
-        selections.ifPresent(personRepository::deleteAllById);
+        selections.ifPresent(personService::deleteAllById);
         return "redirect:people";
     }
     @PostMapping(params = "edit=true")
     public String editPeople(@RequestParam Optional<List<Long>> selections, Model model) {
         log.info(selections);
         selections.ifPresent(longs ->
-                model.addAttribute("person", personRepository.findById(longs.get(0)))
+                model.addAttribute("person", personService.findById(longs.get(0)))
         );
         return "people";
     }
