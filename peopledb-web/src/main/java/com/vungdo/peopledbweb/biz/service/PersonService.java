@@ -1,7 +1,7 @@
 package com.vungdo.peopledbweb.biz.service;
 
 import com.vungdo.peopledbweb.biz.model.Person;
-import com.vungdo.peopledbweb.data.LocalFileRepository;
+import com.vungdo.peopledbweb.data.StorageRepository;
 import com.vungdo.peopledbweb.data.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.core.io.Resource;
@@ -20,9 +20,9 @@ import java.util.zip.ZipInputStream;
 @Service
 public class PersonService {
     private final PersonRepository personRepository;
-    private final LocalFileRepository fileRepository;
+    private final StorageRepository fileRepository;
 
-    public PersonService(PersonRepository personRepository, LocalFileRepository fileRepository) {
+    public PersonService(PersonRepository personRepository, StorageRepository fileRepository) {
         this.personRepository = personRepository;
         this.fileRepository = fileRepository;
     }
