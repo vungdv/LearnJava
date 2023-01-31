@@ -2,11 +2,12 @@ package com.vungdo.peopledbweb.web.controller;
 
 import com.vungdo.peopledbweb.biz.model.Person;
 import com.vungdo.peopledbweb.biz.service.PersonService;
-import com.vungdo.peopledbweb.data.LocalFileRepository;
-import com.vungdo.peopledbweb.data.PersonRepository;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,8 +30,9 @@ public class PeopleController {
         this.personService = personService;
     }
     @ModelAttribute("people")
-    public Iterable<Person> getPeople() {
-        return personService.findAll();
+    public Page<Person> getPeople(@PageableDefault(size = 10) Pageable pageable) {
+        System.out.println("page-size:" + pageable.getPageSize());
+        return personService.findAll(pageable);
     }
     @ModelAttribute("person")
     public Person getPerson() {
@@ -61,18 +63,24 @@ public class PeopleController {
         }
         return "people";
     }
-    @PostMapping(params = "delete=true")
+    @PostMapping(params = "action=delete")
     public String deletePeople(@RequestParam Optional<List<Long>> selections) {
         log.info(selections);
         selections.ifPresent(personService::deleteAllById);
         return "redirect:people";
     }
-    @PostMapping(params = "edit=true")
+    @PostMapping(params = "action=edit")
     public String editPeople(@RequestParam Optional<List<Long>> selections, Model model) {
         log.info(selections);
         selections.ifPresent(longs ->
                 model.addAttribute("person", personService.findById(longs.get(0)))
         );
+        return "people";
+    }
+    @PostMapping(params = "action=import")
+    public String importCsvFile(@RequestParam MultipartFile csvFile) throws IOException {
+        log.info(csvFile.getSize());
+        personService.importCsvFile(csvFile.getInputStream());
         return "people";
     }
 }
