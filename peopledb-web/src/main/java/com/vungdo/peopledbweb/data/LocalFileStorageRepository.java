@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Component
-public class StorageRepository {
+public class LocalFileStorageRepository {
     @Value("${STORAGE_FOLDER}")
     private String STORAGE_FOLDER;
 
