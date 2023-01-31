@@ -35,4 +35,14 @@ public class LocalFileRepository {
             throw new StorageException(e);
         }
     }
+    public void deleteByFilenames(Iterable<String> filenames) {
+        filenames.forEach(filename -> {
+            Path filePath = Path.of(STORAGE_FOLDER).resolve(filename).normalize();
+            try {
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                throw new StorageException(e);
+            }
+        });
+    }
 }

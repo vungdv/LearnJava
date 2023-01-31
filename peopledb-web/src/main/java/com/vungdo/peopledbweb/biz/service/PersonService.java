@@ -36,8 +36,11 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    public void deleteAllById(Iterable<? extends Long> longs) {
-        personRepository.deleteAllById(longs);
+    @Transactional
+    public void deleteAllById(Iterable<Long> ids) {
+        Iterable<String> filenames = personRepository.findFileNamesByIds(ids);
+        personRepository.deleteAllById(ids);
+        fileRepository.deleteByFilenames(filenames);
     }
 
     public Resource getResource(String fileName) {
